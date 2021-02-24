@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable,from } from 'rxjs';
 import * as io from 'socket.io-client';
 import { Socket } from 'ngx-socket-io';
 
@@ -7,23 +7,17 @@ import { Socket } from 'ngx-socket-io';
   providedIn: 'root'
 })
 export class SocketServiceService {
-    // private url = 'http://localhost:9000/';
-    // private socket;
-    socket: SocketIOClient.Socket;
     private connected = false;
     public connectedusers: any;
 
-    constructor() {
-        this.socket = io.connect("http://localhost:9000", {
-            "timeout" : 10000,                  
-            "transports" : ["websocket"]
-            });
+    constructor(private socket :Socket) {
+       
     }
 
-    SetUserName(username: any) {
+    SetUserName(username: string | null) {
         this.socket.emit('add user', username);
-        return Observable.create((observer: { next: (arg0: any) => void; }) => {
-            this.socket.on('logged-user', (data: any) => {
+        return Observable.create((observer:any) => {
+            this.socket.on('logged-user', (data:any) => {
                 this.connected = true;
                 observer.next(data);
             });
@@ -39,7 +33,7 @@ export class SocketServiceService {
 
     public SendMessage(message: any, from: any, to: any) {
         //this.socket.emit('new-message', message);
-        this.socket.emit('new-message', {
+        this.socket.emit('send-message', {
             toid: to,
             message: message,
             fromname: from
@@ -48,14 +42,14 @@ export class SocketServiceService {
 
     public GetMessages() {
         return Observable.create((observer: { next: (arg0: any) => void; }) => {
-            this.socket.on('new-message', (message: any) => {
+            this.socket.on('receive-message', (message: any) => {
                 observer.next(message);
             });
         });
     }
     public GetConnectedUsers() {
-        return Observable.create((observer: { next: (arg0: any) => void; }) => {
-            this.socket.on('client-list', (data: any) => {
+        return Observable.create((observer: any) => {
+            this.socket.on('client-list', (data: any[]) => {
                 observer.next(data);
             });
         });

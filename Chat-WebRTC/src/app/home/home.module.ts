@@ -10,6 +10,7 @@ import { SocketIoConfig } from 'ngx-socket-io';
 
 import { ChatComponent } from './chat/chat.component';
 import { HomeRoutingModule } from './home-routing.module';
+import { FormsModule } from '@angular/forms';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:9000', options: {"force new connection" : true,
@@ -24,6 +25,7 @@ const config: SocketIoConfig = { url: 'http://localhost:9000', options: {"force 
     NzMenuModule,
     IconsProviderModule,
     HomeRoutingModule,
+    FormsModule
     
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],

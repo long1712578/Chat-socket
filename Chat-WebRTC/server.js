@@ -25,14 +25,17 @@ var busyUsers = [];
 var numUsers = 0;
 io.on('connection', (socket) => {
     var addedUser = false;
-    console.log('user connected');
+    console.log(`socket  has connected`);
 
-    socket.on('new-message', (data) => {
-        socket.broadcast.to(data.toid).emit('new-message', data);
+    //Message
+    socket.on('send-message', (data) => {
+        socket.broadcast.to(data.toid).emit('receive-message', data);
     });
 
     socket.on('add user', (username) => {
+        console.log('userId: ', socket.id);
         if (addedUser) return;
+        //add customer in list client.
         clients.push({
             id: socket.id,
             username: username,
@@ -87,11 +90,6 @@ io.on('connection', (socket) => {
                     i++;
                 });
             }
-            // var index = clients.indexOf(socket.username);
-            // if (index !== -1) {
-            //     clients.splice(index, 1);
-            // }
-
             if (busyUsers.length > 0) {
                 var i = 0;
                 busyUsers.forEach(a => {

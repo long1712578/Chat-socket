@@ -243,3 +243,6 @@ body {
 	clear: both;
 	height: 0;
 }
+#user-detail:hover{
+  background-color: rgb(21, 21, 206);
+}
