@@ -28,31 +28,20 @@
         
         <div class="chat-about">
           <div class="chat-with">Master</div>
-          <div class="chat-num-messages">1 902 messages</div>
+          <!-- <div class="chat-num-messages">1 902 messages</div> -->
         </div>
         <i class="fa fa-star"></i>
       </div> <!-- end chat-header -->
       
       <div class="chat-history">
-        <ul>
-          <li class="clearfix">
-            <div class="message-data align-right">
-              <span class="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp;
-              <span class="message-data-name" >Customer</span> <i class="fa fa-circle me"></i>
-              
-            </div>
-            <div class="message other-message float-right">
-             Hello, master!!!
-            </div>
-          </li>
-          
-          <li>
+        <ul> 
+          <li *ngFor="let m of listMessage">
             <div class="message-data">
-              <span class="message-data-name"><i class="fa fa-circle online"></i> Master</span>
+              <span class="message-data-name"><i class="fa fa-circle online"></i>{{m.user}}</span>
               <span class="message-data-time">10:12 AM, Today</span>
             </div>
             <div class="message my-message">
-              Hello, i help you
+             {{m.nd}}
             </div>
           </li>
           
@@ -97,4 +86,4 @@
     </div>
   </li>
 </script>
-<span *ngFor="let m of messages">{{m}}<br></span>
+

@@ -39,8 +39,6 @@ export class HomeComponent implements OnInit {
   AddUser() {
     this.socketServices.SetUserName(this.loggedUserName)
         .subscribe((data:any) => {
-          console.log("data: ",data);
-          sessionStorage.setItem("toId",data.id);
             if (data.username) {
                 //user added
             }

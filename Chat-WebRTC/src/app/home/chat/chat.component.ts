@@ -12,7 +12,7 @@ export class ChatComponent implements OnInit {
   public myMessage:string[]=[];
   public message = '';
   public idUser='';
-  messages: string[] = [];
+  public listMessage: any[] = [];
   public loggedUserName = sessionStorage.getItem("username");
   constructor(private router: Router, private changeDetector: ChangeDetectorRef,
     private socketServices: SocketServiceService) {
@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.GetListSocket();
     this.ReceiveMessage();
+    this.ShowMessage();
   }
 
   //Get listSocket
@@ -36,7 +37,7 @@ export class ChatComponent implements OnInit {
   }
   SendMessage(){
     this.socketServices.SendMessage(this.message,this.loggedUserName,this.idUser);
-    this.message='you_'+this.message;
+    this.message=this.loggedUserName+'_'+this.message;
 
     this.myMessage.push(this.message);
   
@@ -46,16 +47,33 @@ export class ChatComponent implements OnInit {
   }
 
   ReceiveMessage(){
-    console.log("data123");
     this.socketServices.GetMessages()
     .subscribe((data: any) =>{
       console.log('dataMess',data);
+      this.myMessage.push(data.fromname+'_'+data.message);
+      sessionStorage.setItem("myMessage",this.myMessage.toString());
     })
   }
 
   SelectId(id: string){
     this.idUser=id;
     console.log("id",id);
+  }
+
+  ShowMessage(){
+    
+    var  messages: any[] = [];
+    var content='you_long dep trai';
+    var local=content.search('_');
+    console.log("vi tri: ",local);
+    var user=content.slice(0,3);
+    if(user=="you"){
+      var nd=content.slice(4);
+      var ns={user,nd};
+      messages.push(ns);
+      console.log("mess",messages);
+      this.listMessage=messages;
+    }
   }
 
 }
