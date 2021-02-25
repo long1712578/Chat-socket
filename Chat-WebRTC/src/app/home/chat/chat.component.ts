@@ -12,6 +12,7 @@ export class ChatComponent implements OnInit {
   public myMessage:string[]=[];
   public message = '';
   public idUser='';
+  public nameUser='';
   public listMessage: any[] = [];
   public loggedUserName = sessionStorage.getItem("username");
   constructor(private router: Router, private changeDetector: ChangeDetectorRef,
@@ -32,7 +33,6 @@ export class ChatComponent implements OnInit {
 
         var users = data.filter(a => a.username != this.loggedUserName);
         this.liveUserList = users;
-        //console.log("use",users);
       });
   }
   SendMessage(){
@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit {
   
     sessionStorage.setItem("myMessage",this.myMessage.toString());
     this.message='';
-    
+    this.ShowMessage();
   }
 
   ReceiveMessage(){
@@ -52,28 +52,36 @@ export class ChatComponent implements OnInit {
       console.log('dataMess',data);
       this.myMessage.push(data.fromname+'_'+data.message);
       sessionStorage.setItem("myMessage",this.myMessage.toString());
+      this.ShowMessage();
     })
+    
   }
 
-  SelectId(id: string){
+  SelectId(id: string,name:string){
     this.idUser=id;
+    this.nameUser=name;
     console.log("id",id);
   }
 
   ShowMessage(){
     
     var  messages: any[] = [];
-    var content='you_long dep trai';
-    var local=content.search('_');
-    console.log("vi tri: ",local);
-    var user=content.slice(0,3);
-    if(user=="you"){
-      var nd=content.slice(4);
-      var ns={user,nd};
-      messages.push(ns);
-      console.log("mess",messages);
+    var abc=sessionStorage.getItem("myMessage");
+    var arr=abc?.split(',');
+    arr?.forEach(element=>{
+      var local=element.search('_');
+      var user=element.slice(0,local);
+      var mess=element.slice(local+1);
+      var content={user,mess};
+      messages.push(content);
       this.listMessage=messages;
-    }
+      console.log("messcontent",messages);
+      
+    })
+  }
+
+  VideoCall(){
+
   }
 
 }

@@ -199,9 +199,22 @@ body {
       font-weight: bold;
       background: #F2F5F8;
     }
-      button:hover {
-        color: darken(blue, 7%);
-      }
+    #button-list{
+      float: left;
+      color: blue;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      background: #F2F5F8;
+    }
+    #button-call{
+      margin-top:10px ;
+      float: right;
+      background-color: #28a745;
+    }
+    button:hover {
+      color: darken(blue, 7%);
+    }
     
   
 

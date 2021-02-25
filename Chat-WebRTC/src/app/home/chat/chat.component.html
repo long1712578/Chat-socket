@@ -7,7 +7,7 @@
       <ul class="list">
 
         <li class="clearfix" *ngFor="let item of liveUserList" id="user-detail">
-          <div (click)="SelectId(item.id)">
+          <button (click)="SelectId(item.id,item.username)" id="button-list">
           <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg" alt="avatar" />
           <div class="about" >
             <div class="name">{{item.username}}</div>
@@ -15,7 +15,7 @@
               <i class="fa fa-circle online"></i> online
             </div>
           </div>
-          </div>
+          </button>
         </li>
         
        
@@ -27,10 +27,11 @@
         <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar" />
         
         <div class="chat-about">
-          <div class="chat-with">Master</div>
+          <div class="chat-with">{{nameUser}}</div>
           <!-- <div class="chat-num-messages">1 902 messages</div> -->
         </div>
         <i class="fa fa-star"></i>
+        <button  (click)="VideoCall()" id="button-call" class="btn btn-success btn-sm"><i nz-icon nzType="video-camera" nzTheme="outline"></i>&nbsp;Call</button>
       </div> <!-- end chat-header -->
       
       <div class="chat-history">
@@ -41,7 +42,7 @@
               <span class="message-data-time">10:12 AM, Today</span>
             </div>
             <div class="message my-message">
-             {{m.nd}}
+             {{m.mess}}
             </div>
           </li>
           
