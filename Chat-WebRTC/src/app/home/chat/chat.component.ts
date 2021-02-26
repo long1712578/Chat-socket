@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocketServiceService } from 'src/socket-service.service';
@@ -15,6 +16,8 @@ export class ChatComponent implements OnInit {
   public nameUser='';
   public listMessage: any[] = [];
   public loggedUserName = sessionStorage.getItem("username");
+  public isVideoCall=false;
+  public callingInfo = { name: "", content: "", type: "" };
   constructor(private router: Router, private changeDetector: ChangeDetectorRef,
     private socketServices: SocketServiceService) {
 
@@ -81,7 +84,22 @@ export class ChatComponent implements OnInit {
   }
 
   VideoCall(){
-
+    var toCaller=this.liveUserList.find(a=>a.username==this.nameUser);
+    console.log("call: ",toCaller);
+    if(toCaller){
+      this.socketServices.VideoCallAccepted(this.loggedUserName,this.idUser);
+      this.isVideoCall=true;
+    }
+    
   }
 
+  Close(){
+    this.isVideoCall = false;
+  }
+  AcceptVideoCall(){
+
+  }
+  RejectVideoCall(){
+
+  }
 }
