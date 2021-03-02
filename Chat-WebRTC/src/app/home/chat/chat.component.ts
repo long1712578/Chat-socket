@@ -11,12 +11,15 @@ import { SocketServiceService } from 'src/socket-service.service';
 export class ChatComponent implements OnInit {
   public liveUserList: any[] = [];
   public myMessage:string[]=[];
+  public userType: string | undefined;
+  public caller: any;
   public message = '';
   public idUser='';
   public nameUser='';
   public listMessage: any[] = [];
   public loggedUserName = sessionStorage.getItem("username");
   public isVideoCall=false;
+  public isVideoCallAccepted: boolean = false;
   public callingInfo = { name: "", content: "", type: "" };
   constructor(private router: Router, private changeDetector: ChangeDetectorRef,
     private socketServices: SocketServiceService) {
@@ -88,8 +91,11 @@ export class ChatComponent implements OnInit {
     console.log("call: ",toCaller);
     if(toCaller){
       this.socketServices.VideoCallAccepted(this.loggedUserName,this.idUser);
-      this.isVideoCall=true;
+      this.callingInfo.name=toCaller.username;
+      this.callingInfo.content = "Dialing....";
+      this.callingInfo.type = "dialer";
     }
+    this.isVideoCall=true;
     
   }
 
@@ -97,7 +103,12 @@ export class ChatComponent implements OnInit {
     this.isVideoCall = false;
   }
   AcceptVideoCall(){
-
+    var caller=this.liveUserList.find(a=>a.username==this.callingInfo.name);
+    if(caller){
+      this.socketServices.VideoCallAccepted(this.loggedUserName,caller.id);
+      this.userType = "receiver";
+      this.isVideoCallAccepted = true;
+    }
   }
   RejectVideoCall(){
 
