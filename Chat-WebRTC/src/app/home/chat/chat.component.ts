@@ -28,6 +28,8 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetListSocket();
+    this.OnVideoCallRequest();
+    this.OnVideoCallAccepted();
     this.ReceiveMessage();
     this.ShowMessage();
   }
@@ -86,15 +88,41 @@ export class ChatComponent implements OnInit {
     })
   }
 
+  OnVideoCallRequest() {
+    console.log("on video call");
+    this.socketServices
+        .OnVideoCallRequest()
+        .subscribe((data:any) => {
+          console.log("on video123 call");
+            this.callingInfo.name = data.fromname;
+            this.callingInfo.content = "Calling....";
+            this.callingInfo.type = "receiver";
+            this.isVideoCall = true;
+        });
+}
+OnVideoCallAccepted() {
+    this.socketServices
+        .OnVideoCallAccepted()
+        .subscribe((data :any)=> {
+            var calee = this.liveUserList.find(a => a.username == data.fromname);
+            console.log("call15: ",calee);
+            this.userType = "dialer";
+            this.caller = calee.id;
+            this.isVideoCallAccepted = true;
+            this.Close();
+        });
+}
+
   VideoCall(){
     var toCaller=this.liveUserList.find(a=>a.username==this.nameUser);
+    console.log("username : ",this.loggedUserName);
     console.log("call: ",toCaller);
     if(toCaller){
       this.socketServices.VideoCallAccepted(this.loggedUserName,this.idUser);
-      this.callingInfo.name=toCaller.username;
-      this.callingInfo.content = "Dialing....";
-      this.callingInfo.type = "dialer";
     }
+    this.callingInfo.name=toCaller.username;
+    this.callingInfo.content = "Dialing....";
+    this.callingInfo.type = "dialer";
     this.isVideoCall=true;
     
   }
@@ -104,6 +132,7 @@ export class ChatComponent implements OnInit {
   }
   AcceptVideoCall(){
     var caller=this.liveUserList.find(a=>a.username==this.callingInfo.name);
+    console.log("call: ",caller);
     if(caller){
       this.socketServices.VideoCallAccepted(this.loggedUserName,caller.id);
       this.userType = "receiver";

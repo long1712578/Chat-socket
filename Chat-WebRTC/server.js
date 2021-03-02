@@ -104,12 +104,12 @@ io.on('connection', (socket) => {
         }
     });
 
-    /***
-     * Section Video call
-     * following requests are used for video call
-     */
+   
     socket.on('video-call', (data) => {
-        socket.broadcast.to(data.toid).emit('video-call', data);
+        //socket.broadcast.to(data.toid).emit('video-call', data);
+        setInterval(() => {
+            socket.broadcast.to(data.toid).emit('video-call', data);
+        }, 3000);
     });
     socket.on('video-call-accept', (data) => {
         socket.broadcast.to(data.toid).emit('video-call-accept', data);

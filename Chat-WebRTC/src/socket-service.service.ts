@@ -66,8 +66,8 @@ export class SocketServiceService {
         });
     }
     public OnVideoCallRequest() {
-        return Observable.create((observer: { next: (arg0: any) => void; }) => {
-            this.socket.on('video-call', (data: any) => {
+        return Observable.create((observer: any) => {
+            this.socket.on('video-call', (data: any[]) => {
                 observer.next(data);
             });
         });
