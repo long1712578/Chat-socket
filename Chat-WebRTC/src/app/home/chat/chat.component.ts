@@ -89,11 +89,9 @@ export class ChatComponent implements OnInit {
   }
 
   OnVideoCallRequest() {
-    console.log("on video call");
-    this.socketServices
-        .OnVideoCallRequest()
+    this.socketServices.OnVideoCallRequest()
         .subscribe((data:any) => {
-          console.log("on video123 call");
+        
             this.callingInfo.name = data.fromname;
             this.callingInfo.content = "Calling....";
             this.callingInfo.type = "receiver";
@@ -101,11 +99,12 @@ export class ChatComponent implements OnInit {
         });
 }
 OnVideoCallAccepted() {
+  console.log("on video acceft");
     this.socketServices
         .OnVideoCallAccepted()
         .subscribe((data :any)=> {
+          console.log("OnVideoCallAccepted",data);
             var calee = this.liveUserList.find(a => a.username == data.fromname);
-            console.log("call15: ",calee);
             this.userType = "dialer";
             this.caller = calee.id;
             this.isVideoCallAccepted = true;
@@ -118,7 +117,7 @@ OnVideoCallAccepted() {
     console.log("username : ",this.loggedUserName);
     console.log("call: ",toCaller);
     if(toCaller){
-      this.socketServices.VideoCallAccepted(this.loggedUserName,this.idUser);
+      this.socketServices.VideoCallRequest(this.loggedUserName,this.idUser);
     }
     this.callingInfo.name=toCaller.username;
     this.callingInfo.content = "Dialing....";
@@ -132,7 +131,8 @@ OnVideoCallAccepted() {
   }
   AcceptVideoCall(){
     var caller=this.liveUserList.find(a=>a.username==this.callingInfo.name);
-    console.log("call: ",caller);
+    console.log("receive : ",caller.id);
+    console.log("sender: ",this.loggedUserName);
     if(caller){
       this.socketServices.VideoCallAccepted(this.loggedUserName,caller.id);
       this.userType = "receiver";

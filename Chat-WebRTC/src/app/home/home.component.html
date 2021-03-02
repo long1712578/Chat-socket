@@ -41,12 +41,9 @@
       </nz-header>
       <nz-content>
         <div class="inner-content">
-          <router-outlet (activate)="onActivate($event)"></router-outlet>
-
-          <!-- hdhfdhdfhfd
-          <div *ngFor="let item of liveUserList">
-              {{item.username}}
-          </div> -->
+          <router-outlet (activate)="onActivate($event)" >
+          </router-outlet>
+          
         </div>
       </nz-content>
     </nz-layout>

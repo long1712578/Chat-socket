@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChatComponent } from './chat/chat.component';
 
 import { HomeComponent } from './home.component';
+import { VideoComponent } from './chat/video/video.component';
 
 const routes: Routes=[{
     path: '',
@@ -14,8 +15,8 @@ const routes: Routes=[{
             component: ChatComponent
         },
         {
-            path:'chat1',
-            component:ChatComponent
+            path:'video',
+            component:VideoComponent
         
         }
     

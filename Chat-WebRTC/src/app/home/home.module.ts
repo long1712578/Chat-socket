@@ -11,6 +11,7 @@ import { SocketIoConfig } from 'ngx-socket-io';
 import { ChatComponent } from './chat/chat.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { FormsModule } from '@angular/forms';
+import { VideoComponent } from './chat/video/video.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:9000', options: {"force new connection" : true,
@@ -18,7 +19,7 @@ const config: SocketIoConfig = { url: 'http://localhost:9000', options: {"force 
 "timeout" : 10000,                  
 "transports" : ["websocket"]} };
 @NgModule({
-  declarations: [HomeComponent, ChatComponent],
+  declarations: [HomeComponent, ChatComponent, VideoComponent],
   imports: [
     CommonModule,
     NzLayoutModule,

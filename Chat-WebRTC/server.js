@@ -106,10 +106,10 @@ io.on('connection', (socket) => {
 
    
     socket.on('video-call', (data) => {
-        //socket.broadcast.to(data.toid).emit('video-call', data);
-        setInterval(() => {
-            socket.broadcast.to(data.toid).emit('video-call', data);
-        }, 3000);
+        socket.broadcast.to(data.toid).emit('video-call-request', data);
+        // setInterval(() => {
+        //     socket.broadcast.to(data.toid).emit('video-call-request', data);
+        // }, 3000);
     });
     socket.on('video-call-accept', (data) => {
         socket.broadcast.to(data.toid).emit('video-call-accept', data);
