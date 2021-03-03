@@ -1,6 +1,7 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DotnetServiceService } from 'src/app/services/dotnet-service.service';
 import { SocketServiceService } from 'src/socket-service.service';
 
 @Component({
@@ -22,7 +23,7 @@ export class ChatComponent implements OnInit {
   public isVideoCallAccepted: boolean = false;
   public callingInfo = { name: "", content: "", type: "" };
   constructor(private router: Router, private changeDetector: ChangeDetectorRef,
-    private socketServices: SocketServiceService) {
+    private socketServices: SocketServiceService,private dotnetService:DotnetServiceService) {
 
      }
 
@@ -45,6 +46,9 @@ export class ChatComponent implements OnInit {
   }
   SendMessage(){
     this.socketServices.SendMessage(this.message,this.loggedUserName,this.idUser);
+    this.dotnetService.SendMessage({senderName:this.loggedUserName,content:this.message}).subscribe(data=>{
+
+    });
     this.message=this.loggedUserName+'_'+this.message;
 
     this.myMessage.push(this.message);
@@ -55,6 +59,11 @@ export class ChatComponent implements OnInit {
   }
 
   ReceiveMessage(){
+    //api dotnet
+    this.dotnetService.GetMessages().subscribe(data=>{
+      console.log("dotnet data: ",data);
+    })
+
     this.socketServices.GetMessages()
     .subscribe((data: any) =>{
       console.log('dataMess',data);

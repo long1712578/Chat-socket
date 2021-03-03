@@ -1,5 +1,10 @@
-let express = require('express')
+let express = require('express');
+let amqp=require('amqp');
 let app = express();
+
+var rabbitMqConnection = null;
+var _queue = null;
+var _consumerTag = null;
 
 let path = require('path');
 app.use(express.static(__dirname + '/dist/chatApp'));
@@ -25,8 +30,47 @@ var busyUsers = [];
 var numUsers = 0;
 io.on('connection', (socket) => {
     var addedUser = false;
+    var queueName=socket.handshake.query.queueName;
     console.log(`socket  has connected`);
 
+    //Connection rabbitMQ
+    rabbitMqConnection = amqp.createConnection({host: 'amqps://jqltktwa:***@gerbil.rmq.cloudamqp.com/jqltktwa', reconnect: false});
+    // Update our stored tag when it changes
+    rabbitMqConnection.on('tag.change', function (event) {
+        if (_consumerTag === event.oldConsumerTag) {
+            _consumerTag = event.consumerTag;
+            // Consider unsubscribing from the old tag just in case it lingers
+            _queue.unsubscribe(event.oldConsumerTag);
+        }
+    });
+
+     // Listen for ready event
+     rabbitMqConnection.on('ready', function () {
+        console.log('Connected to rabbitMQ');
+
+        // Listen to the queue
+        rabbitMqConnection.queue(queueName, {
+                closeChannelOnUnsubscribe: true,
+                durable: false,
+                autoClose: true
+            },
+            function (queue) {
+                console.log('Connected to ' + queueName);
+                _queue = queue;
+
+                // Bind to the exchange
+                queue.bind('users.direct', queueName);
+
+                queue.subscribe({ack: false, prefetchCount: 1}, function (message, headers, deliveryInfo, ack) {
+                    console.log("Received a message from route " + deliveryInfo.routingKey);
+                    socket.emit('notification', message);
+                    //ack.acknowledge();
+                }).addCallback(function (res) {
+                    // Hold on to the consumer tag so we can unsubscribe later
+                    _consumerTag = res.consumerTag;
+                });
+            });
+    });
     //Message
     socket.on('send-message', (data) => {
         socket.broadcast.to(data.toid).emit('receive-message', data);
